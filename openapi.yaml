@@ -1,0 +1,72 @@
+openapi: 3.0.0
+info:
+  title: Spring4Shell POC
+  version: 1.0.0
+servers:
+  - url: http://localhost:8080
+paths:
+  /helloworld/greeting:
+    get:
+      parameters:
+        - in: query
+          name: greeting
+          schema:
+            $ref: "#/components/schemas/Greeting"
+      responses:
+        '200':
+          $ref: "#/components/responses/Ok"
+        '400':
+          $ref: "#/components/responses/Error"
+      
+    post:
+      description: This is an endpoint vulnerable to Spring4Shell.
+      requestBody:
+        content:
+          application/x-www-form-urlencoded:
+            schema: 
+              $ref: "#/components/schemas/Greeting"
+      responses:
+        '200':
+          $ref: "#/components/responses/Ok"
+        '400':
+          $ref: "#/components/responses/Error"
+          
+components:
+  responses:
+    Ok:
+      description: Successful response
+      content:
+        text/html:
+          schema:
+            type: string
+            example: |
+              <!DOCTYPE html>
+              <html lang="en">
+              <head>
+                  <meta charset="UTF-8">
+                  <title>Reznok's Hello World Spring Application</title>
+              </head>
+              <body>
+                  Hello World! Exploit me!
+              </body>
+              </html>
+    Error:
+      description: Whitelabel Error Page
+      content:
+        text/html:
+          schema:
+            type: string
+            example: |
+              <html><body><h1>Whitelabel Error Page</h1><p>This application has no explicit mapping for /error, so you are seeing this as a fallback.</p><div id='created'>Thu Jan 01 00:00:00 UTC 1970</div><div>There was an unexpected error (type=Bad Request, status=400).</div></body></html>
+  schemas:
+    Greeting:
+      type: object
+      properties:
+        id: 
+          type: number
+          example: 10
+        content:
+          type: string
+          example: "Hello, World!"
+          
+  
